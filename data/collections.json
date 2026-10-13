@@ -1,0 +1,23 @@
+[
+  {
+    "id": "midnight",
+    "name": "Midnight Series",
+    "tag": "Dark Roast",
+    "price": 24,
+    "notes": ["dark chocolate", "molasses", "toasted walnut"]
+  },
+  {
+    "id": "daybreak",
+    "name": "Daybreak Blend",
+    "tag": "Most Loved",
+    "price": 22,
+    "notes": ["honey", "stone fruit", "caramel"]
+  },
+  {
+    "id": "autumn",
+    "name": "Autumn Reserve",
+    "tag": "Seasonal",
+    "price": 28,
+    "notes": ["blueberry", "jasmine", "syrupy finish"]
+  }
+]

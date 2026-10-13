@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nocturn Coffee Roasters — An Elevated Coffee Experience</title>  
+<meta name="description" content="Small-batch, single-origin coffee roasted in Portland. Shipped the week it's roasted." />
+<link rel="icon" href="favicon.ico" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Cormorant+Upright:wght@300;400;500;600;700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@100..900&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Cormorant+Upright:wght@300;400;500;600;700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@0.321.0/dist/umd/lucide.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script type="module" src="js/main.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+<!-- <script src="https://js.hcaptcha.com/1/api.js" async defer></script> -->
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          cream: '#F9F6EE',
+          'cream-2': '#F2EDDF',
+          espresso: '#3C1B10',
+          'espresso-2': '#2A1109',
+          terracotta: '#C84B20',
+          'terracotta-2': '#A83C15',
+          muted: '#8A7B70',
+          ink: '#1A0F0A',
+        },
+        fontFamily: {
+          // display: ['"Cormorant Upright"', 'ui-sans-serif', 'system-ui'],
+          display: ['"Commissioner"', 'ui-sans-serif', 'system-ui'],
+          sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui'],
+          serif: ['"Instrument Serif"', 'ui-serif', 'Georgia'],
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { background-color: #F9F6EE; color: #3C1B10; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+
+  .headline { font-family: 'Commissioner', sans-serif; letter-spacing: -0.02em; line-height: 0.95; }
+  .eyebrow { font-family: 'Clash Display', sans-serif; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700; font-size: 0.72rem; }
+
+  /* Grain overlay */
+  .grain::after {
+    content: "";
+    position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='7'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.1  0 0 0 0 0.05  0 0 0 0.35 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.6'/></svg>");
+    opacity: 0.08; mix-blend-mode: multiply;
+  }
+
+  /* Marquee */
+  .marquee { display: flex; overflow: hidden; gap: 3rem; }
+  .marquee-track { display: flex; gap: 3rem; animation: scroll 32s linear infinite; flex-shrink: 0; }
+  @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
+  /* Floating beans */
+  @keyframes float1 { 0%,100%{transform:translate(0,0) rotate(0)} 50%{transform:translate(10px,-18px) rotate(12deg)} }
+  @keyframes float2 { 0%,100%{transform:translate(0,0) rotate(0)} 50%{transform:translate(-14px,-22px) rotate(-14deg)} }
+  @keyframes float3 { 0%,100%{transform:translate(0,0) rotate(0)} 50%{transform:translate(8px,14px) rotate(-8deg)} }
+  .bean-1 { animation: float1 6s ease-in-out infinite; }
+  .bean-2 { animation: float2 7.5s ease-in-out infinite; }
+  .bean-3 { animation: float3 8s ease-in-out infinite; }
+
+  /* Spinning badge */
+  @keyframes spin-slow { to { transform: rotate(360deg); } }
+  .spin-slow { animation: spin-slow 22s linear infinite; }
+
+  /* Product hero floating */
+  @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+  .bob { animation: bob 5.5s ease-in-out infinite; }
+
+  /* Steam */
+  @keyframes steam { 0% { transform: translateY(0) scale(1); opacity: 0.5 } 100% { transform: translateY(-80px) scale(1.6); opacity: 0 } }
+  .steam { animation: steam 4s linear infinite; }
+  .steam-2 { animation: steam 4s linear infinite 1.2s; }
+  .steam-3 { animation: steam 4s linear infinite 2.4s; }
+
+  /* Buttons */
+  .btn-primary {
+    background: #C84B20; color: #F9F6EE; border-radius: 999px;
+    padding: 0.9rem 1.6rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem;
+    transition: transform .25s ease, background .25s ease, box-shadow .25s ease;
+    box-shadow: 0 10px 25px -12px rgba(200,75,32,0.6);
+  }
+  .btn-primary:hover { background: #A83C15; transform: translateY(-2px); box-shadow: 0 16px 30px -12px rgba(200,75,32,0.7); }
+  .btn-ghost {
+    background: transparent; color: #3C1B10; border: 1.5px solid #3C1B10; border-radius: 999px;
+    padding: 0.85rem 1.5rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem;
+    transition: all .25s ease;
+  }
+  .btn-ghost:hover { background: #3C1B10; color: #F9F6EE; }
+
+  .link-underline { position: relative; }
+  .link-underline::after {
+    content: ""; position: absolute; left: 0; bottom: -3px; height: 2px; width: 0; background: #C84B20;
+    transition: width .3s ease;
+  }
+  .link-underline:hover::after { width: 100%; }
+
+  /* Card hover */
+  .feature-card { transition: transform .4s ease, box-shadow .4s ease; }
+  .feature-card:hover { transform: translateY(-6px); box-shadow: 0 30px 50px -30px rgba(60,27,16,0.3); }
+
+  /* Gallery */
+  .gallery-item { overflow: hidden; border-radius: 20px; }
+  .gallery-item img { transition: transform .9s cubic-bezier(.2,.8,.2,1); display: block; width: 100%; height: 100%; object-fit: cover; }
+  .gallery-item:hover img { transform: scale(1.08); }
+
+  /* Form */
+  .field {
+    width: 100%; background: #F9F6EE; border: 1.5px solid #E6DFCF; border-radius: 14px;
+    padding: 0.95rem 1.1rem; color: #3C1B10; font-size: 1rem; transition: all .2s ease;
+  }
+  .field:focus { outline: none; border-color: #C84B20; box-shadow: 0 0 0 4px rgba(200,75,32,0.12); background: #fff; }
+  .field.invalid { border-color: #C84B20; background: #FDF3EF; }
+  .field-label { font-weight: 600; color: #3C1B10; font-size: 0.9rem; }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(28px); }
+
+  /* Nav blur on scroll */
+  .nav-scrolled { background: rgba(249,246,238,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(60,27,16,0.08); }
+
+  /* Mobile drawer */
+  .drawer-enter { transition: transform .4s cubic-bezier(.2,.8,.2,1), opacity .3s ease; }
+
+  /* Noise bg for sections */
+  .espresso-section { background: #3C1B10; color: #F9F6EE; }
+
+  /* Ticker svg star rotation already uses spin-slow */
+  .star-badge { filter: drop-shadow(0 10px 20px rgba(60,27,16,0.25)); }
+
+  /* Scroll indicator */
+  @keyframes scrollDown { 0% { transform: translateY(0); opacity: 1 } 100% { transform: translateY(16px); opacity: 0 } }
+  .scroll-indicator { animation: scrollDown 1.8s ease-in-out infinite; }
+</style>
+</head>
+
+<body class="grain overflow-x-hidden" x-data="{ mobileOpen: false }">
+
+<!-- ============== NAV ============== -->
+<header
+  x-data="{ scrolled: false }"
+  @scroll.window="scrolled = window.scrollY > 20"
+  :class="scrolled ? 'nav-scrolled' : ''"
+  class="fixed top-0 inset-x-0 z-50 transition-colors duration-300">
+  <nav class="max-w-7xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-2 group">
+      <span class="w-9 h-9 rounded-full bg-espresso text-cream grid place-content-center font-display font-bold text-sm group-hover:bg-terracotta transition-colors">N°</span>
+      <span class="font-display font-bold tracking-tight text-espresso text-lg">Nocturn</span>
+    </a>
+    <ul class="hidden md:flex items-center gap-9 text-[0.95rem] font-medium text-espresso">
+      <li><a href="#about" class="link-underline">About</a></li>
+      <li><a href="#collections" class="link-underline">Collections</a></li>
+      <li><a href="#locations" class="link-underline">Locations</a></li>
+      <li><a href="#contact" class="link-underline">Contact</a></li>
+    </ul>
+    <div class="flex items-center gap-3">
+      <a href="#collections" class="btn-primary text-sm hidden sm:inline-flex">
+        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+        Buy
+      </a>
+      <button @click="mobileOpen = true" class="md:hidden w-11 h-11 grid place-content-center rounded-full border border-espresso/20" aria-label="Open menu">
+        <i data-lucide="menu" class="w-5 h-5 text-espresso"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- Mobile Drawer -->
+<div
+  x-show="mobileOpen" x-cloak
+  x-transition.opacity
+  class="fixed inset-0 z-[60] bg-ink/50 md:hidden" @click="mobileOpen = false">
+  <aside
+    @click.stop
+    x-show="mobileOpen"
+    x-transition:enter="transition ease-out duration-400"
+    x-transition:enter-start="translate-x-full"
+    x-transition:enter-end="translate-x-0"
+    x-transition:leave="transition ease-in duration-300"
+    x-transition:leave-start="translate-x-0"
+    x-transition:leave-end="translate-x-full"
+    class="absolute right-0 top-0 h-full w-[82%] max-w-sm bg-cream p-7 flex flex-col">
+    <div class="flex items-center justify-between mb-10">
+      <span class="font-display font-bold text-lg text-espresso">Menu</span>
+      <button @click="mobileOpen = false" class="w-10 h-10 grid place-content-center rounded-full border border-espresso/20">
+        <i data-lucide="x" class="w-5 h-5 text-espresso"></i>
+      </button>
+    </div>
+    <ul class="flex flex-col gap-5 font-display font-bold text-3xl text-espresso">
+      <li><a @click="mobileOpen = false" href="#about">About</a></li>
+      <li><a @click="mobileOpen = false" href="#collections">Collections</a></li>
+      <li><a @click="mobileOpen = false" href="#locations">Locations</a></li>
+      <li><a @click="mobileOpen = false" href="#contact">Contact</a></li>
+    </ul>
+    <a @click="mobileOpen = false" href="#collections" class="btn-primary mt-auto justify-center">
+      <i data-lucide="shopping-bag" class="w-4 h-4"></i> Shop the Range
+    </a>
+  </aside>
+</div>
+
+<!-- ============== HERO ============== -->
+<section id="top" class="relative pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden">
+  <!-- Decorative background text -->
+  <div aria-hidden="true" class="absolute -top-10 right-[-6%] text-[22rem] font-display font-extrabold text-espresso/[0.04] select-none pointer-events-none hidden lg:block">
+    NOCTURN
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-5 sm:px-8 grid lg:grid-cols-12 gap-12 items-center">
+    <!-- Left column -->
+    <div class="lg:col-span-7 relative z-10">
+      <div class="flex items-center gap-3 mb-6 reveal">
+        <span class="w-2.5 h-2.5 rounded-full bg-terracotta"></span>
+        <span class="eyebrow text-espresso/70">Portland, OR — Est. 2017</span>
+      </div>
+
+      <h1 class="headline text-[3.2rem] sm:text-7xl lg:text-[6.2rem] font-extrabold text-espresso reveal">
+        An Elevated<br>
+        Coffee <span class="relative inline-block">
+          <span class="italic font-serif font-normal text-terracotta">Experience</span>
+          <svg class="absolute left-0 -bottom-2 w-full" viewBox="0 0 300 12" fill="none" aria-hidden="true">
+            <path d="M2 8 C 60 2, 160 12, 298 4" stroke="#C84B20" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </h1>
+
+      <p class="mt-8 max-w-xl text-lg text-espresso/70 leading-relaxed reveal">
+        Small-batch, single-origin beans from farmers we actually know.
+        Roasted this week in Portland. On your doorstep by Friday.
+      </p>
+
+      <div class="mt-10 flex flex-wrap gap-4 reveal">
+        <a href="#collections" class="btn-primary">
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          Shop the Range
+        </a>
+        <a href="#about" class="btn-ghost">
+          <i data-lucide="play" class="w-4 h-4"></i>
+          Our Story
+        </a>
+      </div>
+
+      <!-- Stat strip -->
+      <div class="mt-14 grid grid-cols-3 gap-4 max-w-lg reveal">
+        <div>
+          <div class="font-display font-extrabold text-3xl text-espresso">47</div>
+          <div class="text-xs text-espresso/60 uppercase tracking-wider mt-1">Farmer<br>Partners</div>
+        </div>
+        <div>
+          <div class="font-display font-extrabold text-3xl text-espresso">6<span class="text-terracotta">d</span></div>
+          <div class="text-xs text-espresso/60 uppercase tracking-wider mt-1">Avg. Bean<br>to Doorstep</div>
+        </div>
+        <div>
+          <div class="font-display font-extrabold text-3xl text-espresso">4.9<span class="text-terracotta">★</span></div>
+          <div class="text-xs text-espresso/60 uppercase tracking-wider mt-1">From 12,400<br>Reviews</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right column: Product -->
+    <div class="lg:col-span-5 relative flex justify-center">
+      <div class="relative w-[320px] sm:w-[400px] lg:w-[460px] aspect-square">
+
+        <!-- Circular backdrop -->
+        <div class="absolute inset-0 rounded-full bg-gradient-to-br from-terracotta via-terracotta-2 to-espresso"></div>
+        <div class="absolute inset-6 rounded-full border-2 border-dashed border-cream/40"></div>
+
+        <!-- Product (coffee cup SVG - shifted up for clear visibility) -->
+        <div class="absolute inset-0 flex items-center justify-center bob -mt-6 sm:-mt-10">
+          <svg viewBox="0 0 240 240" class="w-[72%] drop-shadow-[0_30px_40px_rgba(0,0,0,0.4)]" xmlns="http://www.w3.org/2000/svg">
+            <!-- Steam -->
+            <g opacity="0.7" stroke="#F9F6EE" stroke-width="4" stroke-linecap="round" fill="none">
+              <path class="steam" d="M100 60 Q 95 45 105 30 Q 115 15 100 0"/>
+              <path class="steam-2" d="M120 60 Q 115 45 125 30 Q 135 15 120 0"/>
+              <path class="steam-3" d="M140 60 Q 135 45 145 30 Q 155 15 140 0"/>
+            </g>
+            <!-- Saucer -->
+            <ellipse cx="120" cy="210" rx="92" ry="12" fill="#2A1109"/>
+            <!-- Cup -->
+            <path d="M50 90 L62 200 Q65 215 80 215 L160 215 Q175 215 178 200 L190 90 Z" fill="#F9F6EE"/>
+            <!-- Coffee -->
+            <ellipse cx="120" cy="92" rx="70" ry="12" fill="#3C1B10"/>
+            <ellipse cx="120" cy="90" rx="68" ry="10" fill="#5A2E1C"/>
+            <!-- Highlight -->
+            <path d="M60 100 L70 180" stroke="#E6DFCF" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+            <!-- Handle -->
+            <path d="M190 110 Q 220 115 220 150 Q 220 185 185 185" stroke="#F9F6EE" stroke-width="12" fill="none" stroke-linecap="round"/>
+            <!-- Logo on cup -->
+            <text x="120" y="160" text-anchor="middle" font-family="'Clash Display', sans-serif" font-weight="700" font-size="22" fill="#3C1B10">N°</text>
+          </svg>
+        </div>
+
+        <!-- Floating beans -->
+        <svg class="bean-1 absolute top-6 left-2 w-10 h-10" viewBox="0 0 40 40" aria-hidden="true">
+          <ellipse cx="20" cy="20" rx="10" ry="16" fill="#3C1B10" transform="rotate(-20 20 20)"/>
+          <path d="M20 6 Q 24 20 20 34" stroke="#F9F6EE" stroke-width="1.4" fill="none" transform="rotate(-20 20 20)"/>
+        </svg>
+        <svg class="bean-2 absolute bottom-10 -right-2 w-14 h-14" viewBox="0 0 40 40" aria-hidden="true">
+          <ellipse cx="20" cy="20" rx="10" ry="16" fill="#3C1B10" transform="rotate(30 20 20)"/>
+          <path d="M20 6 Q 24 20 20 34" stroke="#F9F6EE" stroke-width="1.4" fill="none" transform="rotate(30 20 20)"/>
+        </svg>
+        <svg class="bean-3 absolute top-20 -right-6 w-8 h-8" viewBox="0 0 40 40" aria-hidden="true">
+          <ellipse cx="20" cy="20" rx="10" ry="16" fill="#3C1B10" transform="rotate(-45 20 20)"/>
+          <path d="M20 6 Q 24 20 20 34" stroke="#F9F6EE" stroke-width="1.4" fill="none" transform="rotate(-45 20 20)"/>
+        </svg>
+
+        <!-- Spinning Badge -->
+        <div class="star-badge absolute -top-4 -left-6 sm:-top-6 sm:-left-10 w-28 h-28 sm:w-36 sm:h-36 bg-cream rounded-full grid place-content-center shadow-xl">
+          <div class="relative">
+            <svg class="spin-slow absolute inset-0 w-full h-full" viewBox="0 0 100 100">
+              <defs>
+                <path id="circle" d="M 50,50 m -36,0 a 36,36 0 1,1 72,0 a 36,36 0 1,1 -72,0"/>
+              </defs>
+              <text font-family="'Clash Display', sans-serif" font-size="10" font-weight="700" fill="#3C1B10" letter-spacing="2">
+                <textPath href="#circle">SINGLE ORIGIN • ETHIOPIA • SMALL BATCH •</textPath>
+              </text>
+            </svg>
+            <div class="w-14 h-14 sm:w-16 sm:h-16 grid place-content-center">
+              <svg viewBox="0 0 24 24" class="w-7 h-7 text-terracotta" fill="currentColor">
+                <path d="M12 2 L14 9 L21 9 L15.5 13 L17.5 20 L12 16 L6.5 20 L8.5 13 L3 9 L10 9 Z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Price tag -->
+        <div class="absolute -bottom-6 right-2 sm:right-6 bg-cream rounded-2xl shadow-xl p-4 flex items-center gap-3 border border-espresso/5">
+          <div class="w-10 h-10 rounded-full bg-terracotta grid place-content-center">
+            <i data-lucide="coffee" class="w-5 h-5 text-cream"></i>
+          </div>
+          <div>
+            <div class="text-[0.65rem] uppercase tracking-wider text-espresso/60 font-semibold">Ethiopia Yirgacheffe</div>
+            <div class="font-display font-bold text-espresso">$22<span class="text-xs font-sans text-espresso/60">/12oz</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="hidden lg:flex absolute bottom-4 left-1/2 -translate-x-1/2 flex-col items-center gap-2 text-espresso/50">
+    <span class="eyebrow text-[0.6rem]">Scroll</span>
+    <div class="w-px h-10 bg-espresso/30 relative overflow-hidden">
+      <div class="absolute inset-x-0 top-0 h-4 bg-terracotta scroll-indicator"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== MARQUEE ============== -->
+<section class="espresso-section py-6 border-y border-cream/10">
+  <div class="marquee">
+    <div class="marquee-track whitespace-nowrap">
+      <template x-for="i in 2">
+        <div class="flex items-center gap-12 pr-12">
+          <span class="font-display font-bold text-2xl">Ethically Sourced</span>
+          <span class="text-terracotta text-3xl">✦</span>
+          <span class="font-display font-bold text-2xl italic font-serif">Roasted Weekly</span>
+          <span class="text-terracotta text-3xl">✦</span>
+          <span class="font-display font-bold text-2xl">Shipped Fresh</span>
+          <span class="text-terracotta text-3xl">✦</span>
+          <span class="font-display font-bold text-2xl italic font-serif">47 Farmer Partners</span>
+          <span class="text-terracotta text-3xl">✦</span>
+          <span class="font-display font-bold text-2xl">Carbon Neutral Delivery</span>
+          <span class="text-terracotta text-3xl">✦</span>
+        </div>
+      </template>
+    </div>
+  </div>
+</section>
+
+<!-- ============== ABOUT ============== -->
+<section id="about" class="py-24 lg:py-32">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 grid lg:grid-cols-2 gap-16 items-center">
+    <div class="reveal">
+      <div class="relative">
+        <img src="https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?auto=format&fit=crop&w=1200&q=80"
+          alt="Barista pouring coffee" class="w-full aspect-[4/5] object-cover rounded-3xl" />
+        <div class="absolute -bottom-6 -right-6 bg-cream rounded-2xl p-5 shadow-xl max-w-[220px] border border-espresso/5">
+          <div class="flex -space-x-2 mb-3">
+            <img class="w-9 h-9 rounded-full border-2 border-cream" src="https://i.pravatar.cc/80?img=12" alt=""/>
+            <img class="w-9 h-9 rounded-full border-2 border-cream" src="https://i.pravatar.cc/80?img=32" alt=""/>
+            <img class="w-9 h-9 rounded-full border-2 border-cream" src="https://i.pravatar.cc/80?img=47" alt=""/>
+          </div>
+          <p class="text-sm text-espresso/70"><span class="font-bold text-espresso">12,000+</span> subscribers hooked on Friday deliveries.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <span class="eyebrow text-terracotta">Our Story</span>
+      <h2 class="headline text-5xl lg:text-6xl font-extrabold mt-4 text-espresso">
+        Coffee as it <span class="italic font-serif font-normal text-terracotta">should</span> be.
+      </h2>
+      <p class="mt-6 text-lg text-espresso/70 leading-relaxed">
+        We started Nocturn out of a garage in Southeast Portland because the specialty scene felt gatekept.
+        Nine years in, we're still obsessed with the same thing: pulling the best flavor out of every bean we touch — and paying the farmers who grew them a wage that reflects that.
+      </p>
+
+      <ul class="mt-8 space-y-4">
+        <li class="flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-terracotta/15 text-terracotta grid place-content-center flex-shrink-0 mt-0.5">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          </span>
+          <span class="text-espresso/80"><strong class="text-espresso">Direct trade only.</strong> We know every farm by name.</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-terracotta/15 text-terracotta grid place-content-center flex-shrink-0 mt-0.5">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          </span>
+          <span class="text-espresso/80"><strong class="text-espresso">Roasted Tuesday.</strong> Shipped Wednesday. On your table by Friday.</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="w-6 h-6 rounded-full bg-terracotta/15 text-terracotta grid place-content-center flex-shrink-0 mt-0.5">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          </span>
+          <span class="text-espresso/80"><strong class="text-espresso">Compostable bags.</strong> Even the valve.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FEATURES / COLLECTIONS ============== -->
+<section id="collections" class="py-24 lg:py-32 bg-cream-2/60 relative">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-16 reveal">
+      <div>
+        <span class="eyebrow text-terracotta">Collections</span>
+        <h2 class="headline text-5xl lg:text-6xl font-extrabold mt-3 text-espresso max-w-2xl">
+          Three ways in.<br>All the <span class="italic font-serif font-normal text-terracotta">good stuff</span>.
+        </h2>
+      </div>
+      <a href="#" class="link-underline font-semibold text-espresso inline-flex items-center gap-2 self-start">
+        Browse all 24 roasts <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+      </a>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <!-- Card 1 -->
+      <article class="feature-card bg-cream rounded-3xl p-8 flex flex-col border border-espresso/5 reveal">
+        <div class="relative h-56 mb-6 rounded-2xl overflow-hidden bg-gradient-to-br from-terracotta/30 to-espresso/20">
+          <img src="https://images.unsplash.com/photo-1583165278997-0250ea5d72e2?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover" alt="Dark roast"/>
+          <span class="absolute top-4 left-4 bg-cream text-espresso text-xs font-semibold px-3 py-1.5 rounded-full">Dark Roast</span>
+        </div>
+        <h3 class="headline text-2xl font-extrabold text-espresso">Midnight Series</h3>
+        <p class="mt-3 text-espresso/70 text-sm leading-relaxed flex-1">
+          Deep, syrupy, built for espresso. Notes of dark chocolate, molasses, toasted walnut.
+        </p>
+        <div class="mt-6 flex items-center justify-between">
+          <span class="font-display font-bold text-xl text-espresso">From $24</span>
+          <button class="w-10 h-10 rounded-full bg-espresso text-cream grid place-content-center hover:bg-terracotta transition-colors">
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="feature-card bg-espresso text-cream rounded-3xl p-8 flex flex-col reveal">
+        <div class="relative h-56 mb-6 rounded-2xl overflow-hidden bg-gradient-to-br from-terracotta to-terracotta-2">
+          <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover mix-blend-luminosity opacity-90" alt="Medium roast"/>
+          <span class="absolute top-4 left-4 bg-cream text-espresso text-xs font-semibold px-3 py-1.5 rounded-full">Most Loved</span>
+        </div>
+        <h3 class="headline text-2xl font-extrabold">Daybreak Blend</h3>
+        <p class="mt-3 text-cream/70 text-sm leading-relaxed flex-1">
+          A medium roast built for the first cup. Honey, stone fruit, a clean caramel finish.
+        </p>
+        <div class="mt-6 flex items-center justify-between">
+          <span class="font-display font-bold text-xl">From $22</span>
+          <button class="w-10 h-10 rounded-full bg-terracotta text-cream grid place-content-center hover:bg-cream hover:text-espresso transition-colors">
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="feature-card bg-cream rounded-3xl p-8 flex flex-col border border-espresso/5 reveal">
+        <div class="relative h-56 mb-6 rounded-2xl overflow-hidden bg-gradient-to-br from-cream-2 to-terracotta/20">
+          <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover" alt="Seasonal"/>
+          <span class="absolute top-4 left-4 bg-terracotta text-cream text-xs font-semibold px-3 py-1.5 rounded-full">Seasonal</span>
+        </div>
+        <h3 class="headline text-2xl font-extrabold text-espresso">Autumn Reserve</h3>
+        <p class="mt-3 text-espresso/70 text-sm leading-relaxed flex-1">
+          Natural-process Ethiopian lots. Blueberry, jasmine, a long syrupy finish. Limited.
+        </p>
+        <div class="mt-6 flex items-center justify-between">
+          <span class="font-display font-bold text-xl text-espresso">From $28</span>
+          <button class="w-10 h-10 rounded-full bg-espresso text-cream grid place-content-center hover:bg-terracotta transition-colors">
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </article>
+    </div>
+
+    <!-- Transparency row -->
+    <div class="grid md:grid-cols-3 gap-10 mt-24">
+      <div class="reveal">
+        <div class="w-14 h-14 rounded-2xl bg-terracotta/10 text-terracotta grid place-content-center mb-5">
+          <i data-lucide="flame" class="w-6 h-6"></i>
+        </div>
+        <h4 class="headline font-extrabold text-xl text-espresso mb-2">Roast Profiles</h4>
+        <p class="text-espresso/70 text-sm leading-relaxed">
+          Every bag ships with the exact profile — curve, drop temp, development time. No mystery.
+        </p>
+      </div>
+      <div class="reveal">
+        <div class="w-14 h-14 rounded-2xl bg-terracotta/10 text-terracotta grid place-content-center mb-5">
+          <i data-lucide="map-pin" class="w-6 h-6"></i>
+        </div>
+        <h4 class="headline font-extrabold text-xl text-espresso mb-2">Sourcing, Open Book</h4>
+        <p class="text-espresso/70 text-sm leading-relaxed">
+          FOB price, farmer name, elevation, and processing method printed on every bag. Always.
+        </p>
+      </div>
+      <div class="reveal">
+        <div class="w-14 h-14 rounded-2xl bg-terracotta/10 text-terracotta grid place-content-center mb-5">
+          <i data-lucide="sparkles" class="w-6 h-6"></i>
+        </div>
+        <h4 class="headline font-extrabold text-xl text-espresso mb-2">Seasonal Drops</h4>
+        <p class="text-espresso/70 text-sm leading-relaxed">
+          New micro-lots every eight weeks. Subscribers get first access — plus 10% off.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== GALLERY ============== -->
+<section class="py-24 lg:py-32">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14 reveal">
+      <div>
+        <span class="eyebrow text-terracotta">The Craft</span>
+        <h2 class="headline text-5xl lg:text-6xl font-extrabold mt-3 text-espresso max-w-xl">
+          From green bean to <span class="italic font-serif font-normal text-terracotta">last sip</span>.
+        </h2>
+      </div>
+      <p class="text-espresso/70 max-w-sm">A look inside the roastery, the farms, and the hands that touch every bag.</p>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
+      <div class="gallery-item reveal col-span-2 row-span-2 aspect-square">
+        <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80" alt="Latte art" loading="lazy"/>
+      </div>
+      <div class="gallery-item reveal aspect-square">
+        <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=800&q=80" alt="Beans in hand" loading="lazy"/>
+      </div>
+      <div class="gallery-item reveal aspect-square">
+        <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=800&q=80" alt="Pour over" loading="lazy"/>
+      </div>
+      <div class="gallery-item reveal aspect-square">
+        <img src="https://images.unsplash.com/photo-1521302080334-4bebac2763a6?auto=format&fit=crop&w=800&q=80" alt="Espresso shot" loading="lazy"/>
+      </div>
+      <div class="gallery-item reveal aspect-square">
+        <img src="https://images.unsplash.com/photo-1442550528053-c431ecb55509?auto=format&fit=crop&w=800&q=80" alt="Roaster" loading="lazy"/>
+      </div>
+      <div class="gallery-item reveal col-span-2 aspect-[2/1]">
+        <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=1600&q=80" alt="Cafe interior" loading="lazy"/>
+      </div>
+      <div class="gallery-item reveal aspect-square">
+        <img src="https://images.unsplash.com/photo-1507133750040-4a8f57021571?auto=format&fit=crop&w=800&q=80" alt="Grinder" loading="lazy"/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== TESTIMONIAL / QUOTE ============== -->
+<section class="espresso-section py-20 lg:py-28">
+  <div class="max-w-5xl mx-auto px-5 sm:px-8 text-center">
+    <svg class="w-10 h-10 mx-auto text-terracotta mb-6" fill="currentColor" viewBox="0 0 24 24"><path d="M4 11c0-4 3-7 7-7v3a4 4 0 0 0-4 4h4v9H4v-9zm10 0c0-4 3-7 7-7v3a4 4 0 0 0-4 4h4v9h-7v-9z"/></svg>
+    <p class="headline text-3xl md:text-5xl font-extrabold leading-tight reveal">
+      "Nocturn ruined every other bag of coffee for me. Tuesday roast, Friday brew. That's it. That's the pitch."
+    </p>
+    <div class="mt-8 flex items-center justify-center gap-3 reveal">
+      <img class="w-11 h-11 rounded-full" src="https://i.pravatar.cc/80?img=15" alt=""/>
+      <div class="text-left">
+        <div class="font-semibold">Priya Mehta</div>
+        <div class="text-cream/60 text-sm">Food & Wine, 2025</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== CONTACT ============== -->
+<section id="contact" class="py-24 lg:py-32">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 grid lg:grid-cols-5 gap-16 items-start">
+    <div class="lg:col-span-2 reveal">
+      <span class="eyebrow text-terracotta">Say Hello</span>
+      <h2 class="headline text-5xl lg:text-6xl font-extrabold mt-3 text-espresso">
+        Got a <span class="italic font-serif font-normal text-terracotta">question</span>?
+      </h2>
+      <p class="mt-6 text-lg text-espresso/70 leading-relaxed">
+        Wholesale, custom blends, press, or just want to geek out about process methods — we read every message.
+      </p>
+
+      <div class="mt-10 space-y-5">
+        <div class="flex items-center gap-4">
+          <div class="w-11 h-11 rounded-full bg-terracotta/10 text-terracotta grid place-content-center">
+            <i data-lucide="mail" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-xs uppercase tracking-wider text-espresso/60 font-semibold">Email</div>
+            <a href="mailto:hello@nocturncoffee.com" class="text-espresso font-medium link-underline">hello@nocturncoffee.com</a>
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="w-11 h-11 rounded-full bg-terracotta/10 text-terracotta grid place-content-center">
+            <i data-lucide="phone" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-xs uppercase tracking-wider text-espresso/60 font-semibold">Phone</div>
+            <a href="tel:+15035550199" class="text-espresso font-medium link-underline">(503) 555-0199</a>
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="w-11 h-11 rounded-full bg-terracotta/10 text-terracotta grid place-content-center">
+            <i data-lucide="map-pin" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-xs uppercase tracking-wider text-espresso/60 font-semibold">Roastery</div>
+            <div class="text-espresso font-medium">2184 SE Division St, Portland OR</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <!-- <form
+      id="contactForm"
+      x-data="{
+        state: 'idle',
+        errors: {},
+        async submit(e) {
+          this.errors = {};
+          const f = e.target;
+          const data = Object.fromEntries(new FormData(f));
+          if (!data.name || data.name.trim().length < 2) this.errors.name = 'Please add your name';
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email || '')) this.errors.email = 'Enter a valid email';
+          if (!data.message || data.message.trim().length < 10) this.errors.message = 'A little more detail please';
+          if (Object.keys(this.errors).length) return;
+          this.state = 'loading';
+          try {
+            const res = await fetch('https://api.web3forms.com/submit', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+              body: JSON.stringify(data)
+            });
+            const json = await res.json();
+            this.state = json.success ? 'success' : 'error';
+            if (json.success) f.reset();
+          } catch(err) { this.state = 'error'; }
+        }
+      }"
+      @submit.prevent="submit($event)"
+      class="lg:col-span-3 bg-cream-2/60 rounded-3xl p-8 lg:p-10 border border-espresso/5 reveal"
+    > -->
+      <!-- Replace this key with your real Web3Forms access key -->
+      <!-- <input type="hidden" name="access_key" value="691cc690-56f7-4d6e-8ece-47106a05fd0f" />
+      <input type="hidden" name="subject" value="New message from Nocturn site" />
+      <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off" />
+
+      <div class="grid sm:grid-cols-2 gap-5">
+        <div>
+          <label class="field-label block mb-2" for="name">Your name</label>
+          <input :class="errors.name && 'invalid'" id="name" name="name" maxlength="25" type="text" placeholder="Jamie Rivera" class="field"/>
+          <p x-show="errors.name" x-text="errors.name" class="text-terracotta text-xs mt-1.5"></p>
+        </div>
+        <div>
+          <label class="field-label block mb-2" for="email">Email</label>
+          <input :class="errors.email && 'invalid'" id="email" name="email" type="email" placeholder="jamie@email.com" class="field"/>
+          <p x-show="errors.email" x-text="errors.email" class="text-terracotta text-xs mt-1.5"></p>
+        </div>
+      </div>
+
+      <div class="mt-5">
+        <label class="field-label block mb-2" for="topic">What's this about?</label>
+        <select id="topic" name="topic" class="field">
+          <option>General question</option>
+          <option>Wholesale / cafe</option>
+          <option>Custom blend</option>
+          <option>Press</option>
+          <option>Something else</option>
+        </select>
+      </div>
+
+      <div class="mt-5">
+        <label class="field-label block mb-2" for="message">Message</label>
+        <textarea :class="errors.message && 'invalid'" id="message" name="message" rows="5" placeholder="Tell us a bit..." class="field resize-none"></textarea>
+        <p x-show="errors.message" x-text="errors.message" class="text-terracotta text-xs mt-1.5"></p>
+      </div>
+
+      <div class="mt-7 flex flex-wrap items-center gap-4">
+        <button type="submit" :disabled="state === 'loading'" class="btn-primary disabled:opacity-70">
+          <span x-show="state === 'idle'" class="flex items-center gap-2">
+            Send message <i data-lucide="send" class="w-4 h-4"></i>
+          </span>
+          <span x-show="state === 'loading'" class="flex items-center gap-2">
+            <svg class="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity="0.3"/><path d="M22 12a10 10 0 0 0-10-10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+            Sending…
+          </span>
+          <span x-show="state === 'success'" class="flex items-center gap-2">
+            Sent — thanks! <i data-lucide="check" class="w-4 h-4"></i>
+          </span>
+          <span x-show="state === 'error'" class="flex items-center gap-2">
+            Try again <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+          </span>
+        </button>
+        <p class="text-xs text-espresso/60">We reply within one business day.</p>
+      </div>
+    </form> -->
+
+
+
+
+    <form
+  id="contactForm"
+  x-data="contactForm()"
+  @submit.prevent="submit($event)"
+  class="lg:col-span-3 bg-cream-2/60 rounded-3xl p-8 lg:p-10 border border-espresso/5 reveal"
+>
+  <input type="hidden" name="access_key" value="691cc690-56f7-4d6e-8ece-47106a05fd0f" />
+  <input type="hidden" name="subject" value="New message from Nocturn site" />
+  
+  <!-- Honeypot Field -->
+  <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off" />
+
+  <div class="grid sm:grid-cols-2 gap-5">
+    <div>
+      <label class="field-label block mb-2" for="name">Your name</label>
+      <input :class="errors.name && 'invalid'" id="name" name="name" type="text" placeholder="Jamie Rivera" class="field"/>
+      <p x-show="errors.name" x-text="errors.name" class="text-terracotta text-xs mt-1.5"></p>
+    </div>
+    <div>
+      <label class="field-label block mb-2" for="email">Email</label>
+      <input :class="errors.email && 'invalid'" id="email" name="email" type="email" placeholder="jamie@email.com" class="field"/>
+      <p x-show="errors.email" x-text="errors.email" class="text-terracotta text-xs mt-1.5"></p>
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <label class="field-label block mb-2" for="topic">What's this about?</label>
+    <select id="topic" name="topic" class="field">
+      <option>General question</option>
+      <option>Wholesale / cafe</option>
+      <option>Custom blend</option>
+      <option>Press</option>
+      <option>Something else</option>
+    </select>
+  </div>
+
+  <div class="mt-5">
+    <label class="field-label block mb-2" for="message">Message</label>
+    <textarea :class="errors.message && 'invalid'" id="message" name="message" rows="5" placeholder="Tell us a bit..." class="field resize-none"></textarea>
+    <p x-show="errors.message" x-text="errors.message" class="text-terracotta text-xs mt-1.5"></p>
+  </div>
+
+  <!-- Google reCAPTCHA Container (Uses Google Test Key for Localhost) -->
+  <div class="mt-5 flex justify-start">
+    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+  </div>
+
+  <div class="mt-7 flex flex-wrap items-center gap-4">
+    <button type="submit" :disabled="state === 'loading'" class="btn-primary disabled:opacity-70">
+      <span x-show="state === 'idle'" class="flex items-center gap-2">
+        Send message <i data-lucide="send" class="w-4 h-4"></i>
+      </span>
+      <span x-show="state === 'loading'" class="flex items-center gap-2">
+        Sending…
+      </span>
+      <span x-show="state === 'success'" class="flex items-center gap-2">
+        Sent — thanks! <i data-lucide="check" class="w-4 h-4"></i>
+      </span>
+      <span x-show="state === 'error'" class="flex items-center gap-2">
+        Try again <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+      </span>
+    </button>
+    <p class="text-xs text-espresso/60">We reply within one business day.</p>
+  </div>
+</form>
+
+    
+  </div>
+</section>
+
+<!-- ============== LOCATIONS / MAP ============== -->
+<section id="locations" class="py-20 bg-cream-2/60">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 grid lg:grid-cols-2 gap-10 items-center">
+    <div class="reveal">
+      <span class="eyebrow text-terracotta">Visit</span>
+      <h2 class="headline text-4xl lg:text-5xl font-extrabold mt-3 text-espresso">
+        Three cafés. One roastery.
+      </h2>
+      <div class="mt-8 space-y-6">
+        <div class="flex justify-between items-start gap-6 pb-6 border-b border-espresso/10">
+          <div>
+            <h4 class="font-display font-bold text-xl text-espresso">Division St. Flagship</h4>
+            <p class="text-espresso/70 text-sm mt-1">2184 SE Division St, Portland</p>
+          </div>
+          <div class="text-sm text-right">
+            <div class="font-semibold text-espresso">7a — 6p</div>
+            <div class="text-espresso/60">Daily</div>
+          </div>
+        </div>
+        <div class="flex justify-between items-start gap-6 pb-6 border-b border-espresso/10">
+          <div>
+            <h4 class="font-display font-bold text-xl text-espresso">Alberta Arts</h4>
+            <p class="text-espresso/70 text-sm mt-1">1402 NE Alberta St, Portland</p>
+          </div>
+          <div class="text-sm text-right">
+            <div class="font-semibold text-espresso">6:30a — 5p</div>
+            <div class="text-espresso/60">Mon — Sat</div>
+          </div>
+        </div>
+        <div class="flex justify-between items-start gap-6">
+          <div>
+            <h4 class="font-display font-bold text-xl text-espresso">Pearl District</h4>
+            <p class="text-espresso/70 text-sm mt-1">915 NW 11th Ave, Portland</p>
+          </div>
+          <div class="text-sm text-right">
+            <div class="font-semibold text-espresso">7a — 4p</div>
+            <div class="text-espresso/60">Daily</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal rounded-3xl overflow-hidden border border-espresso/5 h-[420px] shadow-lg">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3671.5987757540856!2d72.50844967436815!3d23.038499515735463!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e9ac245700001%3A0x297eca4a87ac459e!2sHuptech%20Web%20Pvt.%20Ltd.!5e0!3m2!1sen!2sin!4v1791541945833!5m2!1sen!2sin"
+        class="w-full h-full border-0"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Nocturn Coffee Portland locations"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer class="espresso-section pt-20 pb-10 relative overflow-hidden">
+  <div aria-hidden="true" class="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[16rem] md:text-[22rem] font-display font-extrabold text-cream/[0.04] select-none pointer-events-none whitespace-nowrap">
+    NOCTURN
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="grid md:grid-cols-5 gap-12">
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-2">
+          <span class="w-10 h-10 rounded-full bg-terracotta grid place-content-center font-display font-bold">N°</span>
+          <span class="font-display font-bold text-xl">Nocturn Coffee</span>
+        </div>
+        <p class="mt-5 text-cream/70 max-w-sm text-sm leading-relaxed">
+          Small-batch roasters shipping single-origin coffee across the US since 2026.
+        </p>
+        <form class="mt-6 flex gap-2 max-w-sm">
+          <input type="email" placeholder="Email for the Friday drop" class="flex-1 bg-cream/10 border border-cream/20 rounded-full px-5 py-3 text-sm placeholder:text-cream/50 focus:outline-none focus:border-terracotta"/>
+          <button type="button" class="w-12 h-12 rounded-full bg-terracotta hover:bg-terracotta-2 grid place-content-center flex-shrink-0 transition-colors">
+            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+          </button>
+        </form>
+      </div>
+
+      <div>
+        <h5 class="eyebrow text-cream/60 mb-5">Buy</h5>
+        <ul class="space-y-3 text-cream/80 text-sm">
+          <li><a href="#" class="hover:text-terracotta transition-colors">Whole Bean</a></li>
+          <li><a href="#" class="hover:text-terracotta transition-colors">Ground</a></li>
+          <li><a href="#" class="hover:text-terracotta transition-colors">Subscriptions</a></li>
+          <li><a href="#" class="hover:text-terracotta transition-colors">Gift Cards</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 class="eyebrow text-cream/60 mb-5">Company</h5>
+        <ul class="space-y-3 text-cream/80 text-sm">
+          <li><a href="#about" class="hover:text-terracotta transition-colors">About</a></li>
+          <li><a href="#locations" class="hover:text-terracotta transition-colors">Locations</a></li>
+          <li><a href="#" class="hover:text-terracotta transition-colors">Wholesale</a></li>
+          <li><a href="#" class="hover:text-terracotta transition-colors">Careers</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 class="eyebrow text-cream/60 mb-5">Hours</h5>
+        <ul class="space-y-2 text-cream/80 text-sm">
+          <li class="flex justify-between"><span>Mon — Fri</span><span>7a — 6p</span></li>
+          <li class="flex justify-between"><span>Saturday</span><span>8a — 6p</span></li>
+          <li class="flex justify-between"><span>Sunday</span><span>8a — 4p</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-16 pt-8 border-t border-cream/10 flex flex-col md:flex-row justify-between items-center gap-6">
+      <p class="text-cream/60 text-sm">© 2026 Nocturn Coffee Roasters. All rights reserved.</p>
+      <div class="flex items-center gap-3">
+        <a href="#" aria-label="Instagram" class="w-10 h-10 rounded-full border border-cream/20 grid place-content-center hover:bg-terracotta hover:border-terracotta transition-colors">
+          <i data-lucide="instagram" class="w-4 h-4"></i>
+        </a>
+        <a href="#" aria-label="Twitter" class="w-10 h-10 rounded-full border border-cream/20 grid place-content-center hover:bg-terracotta hover:border-terracotta transition-colors">
+          <i data-lucide="twitter" class="w-4 h-4"></i>
+        </a>
+        <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full border border-cream/20 grid place-content-center hover:bg-terracotta hover:border-terracotta transition-colors">
+          <i data-lucide="facebook" class="w-4 h-4"></i>
+        </a>
+        <a href="#" aria-label="Youtube" class="w-10 h-10 rounded-full border border-cream/20 grid place-content-center hover:bg-terracotta hover:border-terracotta transition-colors">
+          <i data-lucide="youtube" class="w-4 h-4"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
